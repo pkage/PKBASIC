@@ -277,6 +277,6 @@ void aux::intops(Parsedcmd pcmd) {
 		ireg[index] = ceil(ireg[index]);
 	}
 	if (dref.cmd == "^=") {
-		ireg[index] = pow(atof(dref.get_arg(0).c_str()));
+		ireg[index] = pow(ireg[index], atof(dref.get_arg(0).c_str()));
 	}
 }
