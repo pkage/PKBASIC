@@ -4,8 +4,8 @@
 #include <vector>
 #include <string.h>
 
-#ifndef PBASIC_VER
-#define PBASIC_VER 1.0
+#ifndef PKBASIC_VER
+#define PKBASIC_VER 1.0
 #endif
 
 using namespace std;
@@ -45,7 +45,7 @@ public:
 };
 
 // Core function prototypes
-Parsedcmd parsecmd(string &str);
+Parsedcmd parsecmd(string str);
 bool runcmd(Parsedcmd pcmd);
 int chartovarindex(char &ch);
 void iprompt();
@@ -58,17 +58,26 @@ int ireg[52];
 const string letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 const string NM = "0123456789";
 
+// Flags
+bool ERROR_THROWN = false;
+string ERROR_TYPE = "NONE";
+bool IPROMPT = false; // goto & lbl directives disabled in liveprompt mode
+void throw_error(string err) {ERROR_THROWN = true; ERROR_TYPE = err;}
+
 // Auxillary function prototypes
 namespace aux {
 	void print(string s);
 	void system(string s);
-	set_int(register);
+	void set_int(char var, int val);
+	void set_string(char var, string val);
+	void gets(char var);
 }
 
 // main
 int main(int argc, char* argv[]) {
 	if (argc == 1) {
-		cout << "PBasic interactive prompt enabled.";
+		IPROMPT = true;
+		cout << "PKBasic interactive prompt enabled.";
 		iprompt();
 	}
 	if (argc == 2) {
@@ -83,6 +92,7 @@ void iprompt() {
 	cout << "\ntype \"exit\" to exit";
 	string line;
 	while (true) {
+		ERROR_THROWN = false;
 		cin.clear();
 		cout << "\n] ";
 		getline(cin, line);
@@ -92,14 +102,17 @@ void iprompt() {
 		if (!runcmd(parsecmd(line))) {
 			cout << "\nCOMMAND NOT FOUND";
 		} else {
-			cout << "\nCOMMAND RUN";
+			//cout << "\nCOMMAND RUN";
+		}
+		if (ERROR_THROWN) {
+			cout << "ERROR: " << ERROR_TYPE;
 		}
 	}
 	return;
 }
 
 // Command parser
-Parsedcmd parsecmd(string &str) {
+Parsedcmd parsecmd(string str) {
 	int spos = str.find(" ");
 	string cmd, arg;
 	if (spos == -1) {
@@ -128,6 +141,28 @@ bool runcmd(Parsedcmd pcmd) {
 		aux::system(pcmd.get_arg(0));
 		return true;
 	}
+	if (pcmd.cmd[0] == '$') {
+		if (pcmd.arg_count() == 0) {
+			ERROR_THROWN = true;
+			ERROR_TYPE = "UNUSED_VALUE";
+			return true;
+		}
+		Parsedcmd tmp = parsecmd(pcmd.get_arg(0));
+		if (tmp.cmd != "=") {
+			throw_error("INVALID OPERAND ON STRING");
+		} else {
+			string temp = tmp.get_arg(0);
+			if (temp[0] != '\"') {
+			//	cout << temp[0];
+				throw_error("INVALID TYPE");
+				return true;
+			}
+			stripQuotes(temp);
+			aux::set_string(pcmd.cmd[1], temp);
+			return true;
+		}
+	}
+
 	return false;
 }
 
@@ -137,22 +172,35 @@ void stripQuotes(string &in) {
 	return;
 }
 
+int chartovarindex(char &ch) {
+	return letters.find(ch);
+}
+
 // BEGIN AUXILLARY DEFINITIONS
 void aux::print(string s) {
-	stripQuotes(s);
-	string final = "";
-	for (int c = 0; c < s.length(); c++) {
-		// HOLY SHIT ESCAPE CHARACTERS
-		if (s.at(c) == '\\' && (c + 1 != s.length())) {
-			if (s.at(c+1) == 'n') {
-				final += '\n';
-				c++;
-				continue;
+	if (s[0] == '\"') {
+		stripQuotes(s);
+		string final = "";
+		for (int c = 0; c < s.length(); c++) {
+			// HOLY SHIT ESCAPE CHARACTERS
+			if (s.at(c) == '\\' && (c + 1 != s.length())) {
+				if (s.at(c+1) == 'n') {
+					final += '\n';
+					c++;
+					continue;
+				}
 			}
+			final += s.at(c);
 		}
-		final += s.at(c);
+		cout << final;
+	} else if (s[0] == '$') {
+		int index = chartovarindex(s[1]);
+		if (index == -1) {
+			throw_error("VARIABLE NOT FOUND");
+		} else {
+			cout << sreg[index];
+		}
 	}
-	cout << final;
 }
 
 void aux::system(string s) {
@@ -161,4 +209,28 @@ void aux::system(string s) {
 	cout.clear();
 	system("clear");
 	cout << "\nFinished execute";
+}
+
+void aux::set_int(char var, int val) {
+	int index = chartovarindex(var);
+	if (index != -1) {
+		ireg[index] = val;
+	} else {
+		ERROR_THROWN = true;
+		ERROR_TYPE = "VARIABLE NOT FOUND";
+	}
+}
+
+void aux::set_string(char var, string str) {
+	int index = chartovarindex(var);
+        if (index != -1) {
+                sreg[index] = str;
+        } else {
+                ERROR_THROWN = true;
+                ERROR_TYPE = "STRING NOT FOUND";
+        }
+}
+
+void gets(char var) {
+
 }
