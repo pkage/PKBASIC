@@ -52,12 +52,20 @@ void iprompt();
 void fprompt() {}
 void stripQuotes(string &in);
 
+// Variable registers
+string sreg[52];
+int ireg[52];
+const string letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+const string NM = "0123456789";
+
 // Auxillary function prototypes
 namespace aux {
 	void print(string s);
 	void system(string s);
+	set_int(register);
 }
 
+// main
 int main(int argc, char* argv[]) {
 	if (argc == 1) {
 		cout << "PBasic interactive prompt enabled.";
