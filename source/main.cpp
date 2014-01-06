@@ -3,6 +3,7 @@
 #include <sstream>
 #include <vector>
 #include <string.h>
+#include <cmath>
 
 #ifndef PKBASIC_VER
 #define PKBASIC_VER 1.0
@@ -54,7 +55,7 @@ void stripQuotes(string &in);
 
 // Variable registers
 string sreg[52];
-int ireg[52];
+float ireg[52];
 const string letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 const string NM = "0123456789";
 
@@ -71,6 +72,7 @@ namespace aux {
 	void set_int(char var, int val);
 	void set_string(char var, string val);
 	void gets(char var);
+	void intops(Parsedcmd pcmd);
 }
 
 // main
@@ -161,6 +163,11 @@ bool runcmd(Parsedcmd pcmd) {
 			aux::set_string(pcmd.cmd[1], temp);
 			return true;
 		}
+		return true;
+	}
+	if (pcmd.cmd[0] == '#') {
+		aux::intops(pcmd);
+		return true;
 	}
 
 	return false;
@@ -200,6 +207,10 @@ void aux::print(string s) {
 		} else {
 			cout << sreg[index];
 		}
+	} else if (s[0] == '#') {
+		int index = chartovarindex(s[1]); if (index == -1) {throw_error("VARIABLE NOT FOUND"); return;}
+		stringstream ss; ss.clear(); ss << ireg[index];
+		cout << ss.str();
 	}
 }
 
@@ -208,7 +219,7 @@ void aux::system(string s) {
 	cout << "\nExecuting: [" << s << "]\n";
 	cout.clear();
 	system("clear");
-	cout << "\nFinished execute";
+	cout << "\nFinished execute.";
 }
 
 void aux::set_int(char var, int val) {
@@ -232,5 +243,40 @@ void aux::set_string(char var, string str) {
 }
 
 void gets(char var) {
+	int index = chartovarindex(var);
+	if (index != -1) {
+		cin >> sreg[index];
+	} else {
+		throw_error("VARIABLE NOT FOUND");
+	}
+}
 
+void aux::intops(Parsedcmd pcmd) {
+	int index = chartovarindex(pcmd.cmd[1]);
+	if (index == -1) {
+		throw_error("VARIABLE NOT FOUND");
+		return;
+	}
+	Parsedcmd dref = parsecmd(pcmd.get_arg(0));
+	if (dref.cmd == "=") {
+		ireg[index] = atof(dref.get_arg(0).c_str());
+	}
+	if (dref.cmd == "+=") {
+		ireg[index] = ireg[index] + atof(dref.get_arg(0).c_str());
+	}
+	if (dref.cmd == "-=") {
+		ireg[index] = ireg[index] - atof(dref.get_arg(0).c_str());
+	}
+	if (dref.cmd == "*=") {
+		ireg[index] = ireg[index] * atof(dref.get_arg(0).c_str());
+	}
+	if (dref.cmd == "floor") {
+		ireg[index] = floor(ireg[index]);
+	}
+	if (dref.cmd == "ceil") {
+		ireg[index] = ceil(ireg[index]);
+	}
+	if (dref.cmd == "^=") {
+		ireg[index] = pow(atof(dref.get_arg(0).c_str()));
+	}
 }
