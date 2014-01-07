@@ -50,8 +50,11 @@ Parsedcmd parsecmd(string str);
 bool runcmd(Parsedcmd pcmd);
 int chartovarindex(char &ch);
 void iprompt();
-void fprompt() {}
+void fprompt(string file);
 void stripQuotes(string &in);
+void inlinate_functions(PFile &pf);
+int get_label(PFile &pf, int number);
+int get_label(PFile &pf, char ivar);
 
 // Variable registers
 string sreg[52];
@@ -85,6 +88,7 @@ int main(int argc, char* argv[]) {
 	}
 	if (argc == 2) {
 		cout << "One argument! : " << argv[1] << "\nThis is a file we should run.\n";
+		fprompt(string(argv[1]));
 	}
 	cout << "\n";
 	return 0;
@@ -139,9 +143,19 @@ bool runcmd(Parsedcmd pcmd) {
 		aux::print(pcmd.get_arg(0));
 		return true;
 	}
-	if (pcmd.cmd == "system") {
+/*	if (pcmd.cmd == "system") {
 		cout << "System commanded!";
 		aux::system(pcmd.get_arg(0));
+		return true;
+ 	} */
+	if (pcmd.cmd == "get") {
+		if (pcmd.get_arg(0)[0] == '#') {
+			aux::getint(pcmd.get_arg(0)[1]);
+		} else if (pcmd.get_arg(0)[0] == '$') {
+			aux::gets(pcmd.get_arg(0)[1]);
+		} else {
+			throw_error("INVALID GET CALL: NO RECEPTACLE");
+		}
 		return true;
 	}
 	if (pcmd.cmd[0] == '$') {
@@ -243,7 +257,7 @@ void aux::set_string(char var, string str) {
         }
 }
 
-void gets(char var) {
+void aux::gets(char var) {
 	int index = chartovarindex(var);
 	if (index != -1) {
 		cin >> sreg[index];
@@ -292,4 +306,69 @@ void aux::getint(char var) {
 	cin >> tmp;
 	ireg[index] = atof(tmp.c_str());
 	return;
+}
+
+void fprompt(string file) {
+	Parsedcmd pcmd;
+	int tmp;
+	PFile pf; pf.get_from_file(file);
+	for (int c = 0; c < pf.lines.size(); c++) {
+		pcmd = parsecmd(pf.lines.at(c));
+		if (pcmd.cmd == "goto") {
+			if (pcmd.get_arg(0)[0] == '#') {
+				tmp = get_label(pf, pcmd.get_arg(0)[1]);
+				if (tmp == -2) {
+					throw_error("VARIABLE NOT FOUND");
+				}
+			} else {
+				tmp = get_label(pf, atoi(pcmd.get_arg(0).c_str()));
+			}
+			if (tmp == -1) {
+				throw_error("LABEL NOT FOUND");
+			}
+			if (tmp >= 0) {
+				c = tmp;
+			}
+		} else if (pcmd.cmd == "label") {
+			// do nothing
+		} else {
+			runcmd(pcmd);
+		}
+		if (ERROR_THROWN) {
+			stringstream ss; ss.clear(); ss << c;
+			cout << "\nERROR: " << ERROR_TYPE << "\nLINE: " << ss.str();
+		}
+	}
+
+}
+
+int get_label(PFile &pf, int label) {
+	Parsedcmd pc;
+	for (int c = 0; c < pf.lines.size(); c++) {
+		pc = parsecmd(pf.lines.at(c));
+		if (pc.cmd == "label") {
+			if (label == atoi(pc.get_arg(0).c_str())) {
+				return c;
+			}
+		}
+	}
+	return -1;
+}
+
+
+int get_label(PFile &pf, char ivar) {
+	int index = chartovarindex(ivar);
+	if (index == -1) {
+		return -2;
+	}
+	Parsedcmd pc;
+        for (int c = 0; c < pf.lines.size(); c++) {
+                pc = parsecmd(pf.lines.at(c));
+                if (pc.cmd == "label") {
+                        if (ireg[index] == atof(pc.get_arg(0).c_str())) {
+                                return c;
+                        }
+                }
+        }
+        return -1;
 }
