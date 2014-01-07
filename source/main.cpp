@@ -73,6 +73,7 @@ namespace aux {
 	void set_string(char var, string val);
 	void gets(char var);
 	void intops(Parsedcmd pcmd);
+	void getint(char var);
 }
 
 // main
@@ -279,4 +280,16 @@ void aux::intops(Parsedcmd pcmd) {
 	if (dref.cmd == "^=") {
 		ireg[index] = pow(ireg[index], atof(dref.get_arg(0).c_str()));
 	}
+}
+
+void aux::getint(char var) {
+	int index = chartovarindex(var);
+	if (index == -1) {
+		throw_error("VARIABLE NOT FOUND");
+		return;
+	}
+	string tmp;
+	cin >> tmp;
+	ireg[index] = atof(tmp.c_str());
+	return;
 }
