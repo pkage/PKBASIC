@@ -274,26 +274,66 @@ void aux::intops(Parsedcmd pcmd) {
 		return;
 	}
 	Parsedcmd dref = parsecmd(pcmd.get_arg(0));
-	if (dref.cmd == "=") {
-		ireg[index] = atof(dref.get_arg(0).c_str());
-	}
-	if (dref.cmd == "+=") {
-		ireg[index] = ireg[index] + atof(dref.get_arg(0).c_str());
-	}
-	if (dref.cmd == "-=") {
-		ireg[index] = ireg[index] - atof(dref.get_arg(0).c_str());
-	}
-	if (dref.cmd == "*=") {
-		ireg[index] = ireg[index] * atof(dref.get_arg(0).c_str());
-	}
-	if (dref.cmd == "floor") {
-		ireg[index] = floor(ireg[index]);
-	}
-	if (dref.cmd == "ceil") {
-		ireg[index] = ceil(ireg[index]);
-	}
-	if (dref.cmd == "^=") {
-		ireg[index] = pow(ireg[index], atof(dref.get_arg(0).c_str()));
+	if (NM.find(dref.get_arg(0)[0]) != -1) {
+		if (dref.cmd == "=") {
+			ireg[index] = atof(dref.get_arg(0).c_str());
+		}
+		if (dref.cmd == "+=") {
+			ireg[index] = ireg[index] + atof(dref.get_arg(0).c_str());
+		}
+		if (dref.cmd == "-=") {
+			ireg[index] = ireg[index] - atof(dref.get_arg(0).c_str());
+		}
+		if (dref.cmd == "*=") {
+			ireg[index] = ireg[index] * atof(dref.get_arg(0).c_str());
+		}
+		if (dref.cmd == "floor") {
+			ireg[index] = floor(ireg[index]);
+		}
+		if (dref.cmd == "ceil") {
+			ireg[index] = ceil(ireg[index]);
+		}
+		if (dref.cmd == "^=") {
+			ireg[index] = pow(ireg[index], atof(dref.get_arg(0).c_str()));
+		}
+		if (dref.cmd == "%=") {
+			ireg[index] = (int)ireg[index]%(int)floor(atoi(dref.get_arg(0).c_str()));
+		}
+		if (dref.cmd == "~~") {
+			ireg[index] = rand();
+		}
+		if (dref.cmd == "/=") {
+                        ireg[index] = ireg[index]/atof(dref.get_arg(0).c_str());
+                }
+	} else if (dref.get_arg(0)[0] == '#') {
+		int i2 = chartovarindex(dref.get_arg(0)[1]);
+		if (i2 == -1) {
+			throw_error("VARIABLE NOT FOUND");
+			return;
+		}
+		if (dref.cmd == "=") {
+                        ireg[index] = ireg[i2];
+                }
+                if (dref.cmd == "+=") {
+                        ireg[index] = ireg[index] + ireg[i2];
+                }
+                if (dref.cmd == "-=") {
+                        ireg[index] = ireg[index] - ireg[i2];
+                }
+                if (dref.cmd == "*=") {
+                        ireg[index] = ireg[index] * ireg[i2];
+                }
+		if (dref.cmd == "/=") {
+			ireg[index] = ireg[index]/ireg[i2];
+		}
+		if (dref.cmd == "^=") {
+                        ireg[index] = pow(ireg[index], ireg[i2]);
+                }
+                if (dref.cmd == "%=") {
+                        ireg[index] = (int)ireg[index]%(int)floor(ireg[i2]);
+                }
+	} else {
+		throw_error("INVALID OPERAND ON INTEGER");
 	}
 }
 
