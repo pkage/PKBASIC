@@ -77,6 +77,7 @@ namespace aux {
 	void gets(char var);
 	void intops(Parsedcmd pcmd);
 	void getint(char var);
+	bool ifstatement(string stmt);
 }
 
 // main
@@ -87,7 +88,7 @@ int main(int argc, char* argv[]) {
 		iprompt();
 	}
 	if (argc == 2) {
-		cout << "One argument! : " << argv[1] << "\nThis is a file we should run.\n";
+		//cout << "One argument! : " << argv[1] << "\nThis is a file we should run.\n";
 		fprompt(string(argv[1]));
 	}
 	cout << "\n";
@@ -310,8 +311,14 @@ void aux::getint(char var) {
 
 void fprompt(string file) {
 	Parsedcmd pcmd;
-	int tmp;
-	PFile pf; pf.get_from_file(file);
+	int tmp; bool temp;
+//	cout << "GETTING PFile FROM " << file << "\n";
+	PFile pf;
+	if (!pf.get_from_file(file)) {
+		cout << "ERROR: UNABLE TO OPEN FILE\n";
+		return;
+	}
+//	cout << "STARTING MAIN LOOP";
 	for (int c = 0; c < pf.lines.size(); c++) {
 		pcmd = parsecmd(pf.lines.at(c));
 		if (pcmd.cmd == "goto") {
@@ -331,6 +338,15 @@ void fprompt(string file) {
 			}
 		} else if (pcmd.cmd == "label") {
 			// do nothing
+		} else if (pcmd.cmd == "if") {
+			temp = aux::ifstatement(pcmd.get_arg(0));
+			if (!ERROR_THROWN) {
+				if (!temp) {
+					c++;
+				}
+			}
+		} else if (pcmd.cmd[0] == '/' && pcmd.cmd[1] == '/') {
+			// don't do shit
 		} else {
 			runcmd(pcmd);
 		}
@@ -371,4 +387,67 @@ int get_label(PFile &pf, char ivar) {
                 }
         }
         return -1;
+}
+
+bool aux::ifstatement(string stmt) {
+	Parsedcmd t1, t2;
+	t1 = parsecmd(stmt);
+	t2 = parsecmd(t1.get_arg(0));
+	string bit1, bit2, operand;
+	bit1 = t1.cmd;
+	bit2 = t2.get_arg(0);
+	operand = t2.cmd;
+	int i1, i2;
+	if (bit1[0] == '$' && bit2[0] == '$') {
+		i1 = chartovarindex(bit1[1]);
+		i2 = chartovarindex(bit2[1]);
+		if (i1 == -1 || i2 == -1) {
+			throw_error("VARIABLE NOT FOUND");
+			return false;
+		}
+		if (operand == "==") {
+			if (sreg[i1] == sreg[12]) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			throw_error("ILLEGAL OPERATION ON STRING");
+		}
+	} else
+	if (bit1[0] == '#' && bit2[0] == '#') {
+		i1 = chartovarindex(bit1[1]);
+		i2 = chartovarindex(bit2[1]);
+		if (i1 == -1 || i2 == -1) {
+			throw_error("VARIABLE NOT FOUND");
+			return false;
+		} else
+		if (operand == "==") {
+			return (ireg[i1] == ireg[i2]);
+		} else
+		if (operand == ">") {
+			return (ireg[i1] > ireg[i2]);
+		} else
+		if (operand == "<") {
+			return (ireg[i1] < ireg[i2]);
+		} else
+		if (operand == ">=") {
+			return (ireg[i1] >= ireg[i2]);
+		} else
+		if (operand == "<=") {
+			return (ireg[i1] <= ireg[i2]);
+		} else
+		if (operand == "!=") {
+			return (ireg[i1] != ireg[i2]);
+		} else {
+			return false;
+			throw_error("ILLEGAL OPERAND ON NUMBER");
+		}
+	}
+	if (bit1[0] != bit2[0]) {
+		throw_error("TYPE MISMATCH");
+	} else {
+		throw_error("INVALID TYPE");
+	}
+	return false;
 }

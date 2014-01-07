@@ -56,7 +56,7 @@ if cbt == 1:
 	f = open("run", "w")
 	f.write('''#! /usr/bin/env python
 import os
-os.system("../builds/''' + mfile + '")')
+os.system("../builds/''' + mfile + ' firstprogram.pkb")') # added program autorun here because lazy
 	os.system("chmod +x run")
 	print("Created run token.")
 else:
