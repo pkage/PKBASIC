@@ -82,6 +82,7 @@ namespace aux {
 
 // main
 int main(int argc, char* argv[]) {
+	srand(time(0));
 	if (argc == 1) {
 		IPROMPT = true;
 		cout << "PKBasic interactive prompt enabled.";

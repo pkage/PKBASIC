@@ -6,6 +6,7 @@ get #d
 label 1
 #b ~~ #d
 print #b
+print "|"
 if #a == #b
 goto 2
 #c += 1
