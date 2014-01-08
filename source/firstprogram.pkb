@@ -1,19 +1,16 @@
-#a = 0
-print "times to spin: "
-get #b
+print "likelyhood: "
+get #d
+#a ~~ #d
+#c = 0
 
 label 1
-if #a > #b
-goto 2
-
-print "["
-print #a
-print "/"
+#b ~~ #d
 print #b
-print "]\n"
-
-#a += 1
+if #a == #b
+goto 2
+#c += 1
 goto 1
 
 label 2
-print "\ndone!"
+print "done\nduration:"
+print #c

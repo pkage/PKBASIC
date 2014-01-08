@@ -300,7 +300,7 @@ void aux::intops(Parsedcmd pcmd) {
 			ireg[index] = (int)ireg[index]%(int)floor(atoi(dref.get_arg(0).c_str()));
 		}
 		if (dref.cmd == "~~") {
-			ireg[index] = rand();
+			ireg[index] = rand()%atoi(dref.get_arg(0).c_str());;
 		}
 		if (dref.cmd == "/=") {
                         ireg[index] = ireg[index]/atof(dref.get_arg(0).c_str());
@@ -332,6 +332,9 @@ void aux::intops(Parsedcmd pcmd) {
                 if (dref.cmd == "%=") {
                         ireg[index] = (int)ireg[index]%(int)floor(ireg[i2]);
                 }
+		if (dref.cmd == "~~") {
+			ireg[index] = rand()%(int)floor(ireg[i2]);
+		}
 	} else {
 		throw_error("INVALID OPERAND ON INTEGER");
 	}
