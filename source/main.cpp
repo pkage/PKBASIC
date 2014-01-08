@@ -78,6 +78,7 @@ namespace aux {
 	void intops(Parsedcmd pcmd);
 	void getint(char var);
 	bool ifstatement(string stmt);
+	void syscall(string cmd);
 }
 
 // main
@@ -186,7 +187,9 @@ bool runcmd(Parsedcmd pcmd) {
 		aux::intops(pcmd);
 		return true;
 	}
-
+	if (pcmd.cmd == "sys") {
+		std::system(pcmd.get_arg(0).c_str());
+	}
 	return false;
 }
 
@@ -494,4 +497,8 @@ bool aux::ifstatement(string stmt) {
 		throw_error("INVALID TYPE");
 	}
 	return false;
+}
+
+void aux::syscall(string cmd) {
+	system(cmd.c_str());
 }

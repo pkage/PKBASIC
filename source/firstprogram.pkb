@@ -1,4 +1,5 @@
 print "likelyhood: "
+sys "clear"
 get #d
 #a ~~ #d
 #c = 0
