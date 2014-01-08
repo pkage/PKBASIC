@@ -41,11 +41,11 @@ if mfile == "":
 	sys.exit(0)
 
 print("Compiling...\n")
-os.system(comp + " " + mfile + ".cpp -o ../temp/" + mfile + " " + args)
+os.system(comp + " " + mfile + ".cpp -o ../temp/" + mfile + ".o " + args)
 print("\nCompile finished.")
 cbt = 0
-if os.path.isfile("../temp/" + mfile) == True:
-	shutil.move("../temp/" + mfile, "../builds/" + mfile)
+if os.path.isfile("../temp/" + mfile + '.o') == True:
+	shutil.move("../temp/" + mfile + '.o', "../builds/" + mfile + '.o')
 	cbt = 1
 else:
 	cbt_ = raw_input("Build failed. Create run token anyways? [y/n]: ")
@@ -56,7 +56,7 @@ if cbt == 1:
 	f = open("run", "w")
 	f.write('''#! /usr/bin/env python
 import os
-os.system("../builds/''' + mfile + ' firstprogram.pkb")') # added program autorun here because lazy
+os.system("../builds/''' + mfile + '.o firstprogram.pkb")') # added program autorun here because lazy
 	os.system("chmod +x run")
 	print("Created run token.")
 else:

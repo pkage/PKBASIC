@@ -58,7 +58,7 @@ int get_label(PFile &pf, char ivar);
 
 // Variable registers
 string sreg[52];
-float ireg[52];
+double ireg[52];
 const string letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 const string NM = "0123456789";
 
