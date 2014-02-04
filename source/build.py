@@ -53,11 +53,14 @@ else:
 		cbt = 1
 
 if cbt == 1:
+	"""
 	f = open("run", "w")
 	f.write('''#! /usr/bin/env python
 import os
 os.system("../builds/''' + mfile + '.o firstprogram.pkb")') # added program autorun here because lazy
 	os.system("chmod +x run")
-	print("Created run token.")
+	print("Created run token.")"""
+	os.system("ln ../builds/" + mfile + ".o ./" + mfile + ".o")
+	print("Created hardlink.")
 else:
 	print("Did not create run token. Run token currently points to previous build.")
