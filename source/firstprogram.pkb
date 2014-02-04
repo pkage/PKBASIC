@@ -1,9 +1,9 @@
 goto 4
 label 3
 // subroutine test
-//print "likelyhood: "
-//sys "clear"
-/get #d
+// print "likelyhood: "
+// sys "clear"
+// get #d
 #a ~~ #d
 #c = 0
 
@@ -17,8 +17,9 @@ goto 2
 goto 1
 
 label 2
-print "done\nduration:"
+print "done [duration:"
 print #c
+print "]"
 
 goto #Z
 
@@ -32,6 +33,8 @@ get #d
 label 5
 if #f >= #e
 goto 6
+
+print ("\nstarting new round: ")
 #Z = 7
 goto 3
 label 7
@@ -39,7 +42,7 @@ label 7
 #f += 1
 goto 5
 label 6
-print "Ended.\nCycles: "
+print "\nEnded.\nCycles: "
 print #f
 print "\nInternal cycles: "
 print #A
