@@ -1,4 +1,0 @@
-this is a note
-
-extensions will be called whenever necessary - will have access to variables
-using system liberally - i'm a terrible person

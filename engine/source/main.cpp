@@ -189,6 +189,7 @@ bool runcmd(Parsedcmd pcmd) {
 	}
 	if (pcmd.cmd == "sys") {
 		std::system(pcmd.get_arg(0).c_str());
+		return true;
 	}
 	return false;
 }
