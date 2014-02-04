@@ -9,5 +9,10 @@ variables are written to file by main
 processed in function in headerfile*
 library (written in C++ or whatever) processes it (and is passed invokation by arg) and generates a tiny modifier script
 	modifier scripts solely contain variables: meant to modify the environment
+executed by main
+
+
+
+*provided lib is written in C++, it can really be written in almost anything
 
 
