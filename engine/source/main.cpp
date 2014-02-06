@@ -55,6 +55,7 @@ void stripQuotes(string &in);
 void inlinate_functions(PFile &pf);
 int get_label(PFile &pf, int number);
 int get_label(PFile &pf, char ivar);
+void dumpvars(string ofile);
 
 // Variable registers
 string sreg[52];
@@ -502,4 +503,19 @@ bool aux::ifstatement(string stmt) {
 
 void aux::syscall(string cmd) {
 	system(cmd.c_str());
+}
+
+void dumpvars(string ofile) {
+	stringstream ss;
+	ofstream of; of.open(ofile.c_str());
+	if (of) {
+		throw_error("UNABLE TO OPEN VARDUMP");
+		return;
+	}
+	for (int c = 0; c < letters.length(); c++) {
+		ss.clear(); ss << ireg[chartovarindex(letters.at(c))];
+		of << ("#" + letters.at(c) + ss.str());
+		of << ("$" + letters.at(c) + sreg[chartovarindex(letters.at(c))]);
+	}
+	of.close();
 }

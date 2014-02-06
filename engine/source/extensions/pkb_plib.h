@@ -55,6 +55,7 @@ namespace plib {
                 }
             }
         }
+	ifile.close();
     }
     // Flags
     bool ERROR_THROWN = false;
