@@ -6,7 +6,6 @@
 using namespace std;
 
 namespace plib {
-    
     class Parsedcmd {
     public:
         string cmd;
@@ -34,6 +33,29 @@ namespace plib {
     const string letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
     const string NM = "0123456789";
     
+    int chartovarindex(char &ch) {
+        return letters.find(ch);
+    }
+    
+    bool import_varlist(string file) {
+        ifstream ifile;
+        ifile.open(file.c_str());
+        if (!ifile) {
+            return false;
+        }
+        string line; int tmp;
+        while (!ifile.eof()) {
+            line = getline(ifile);
+            tmp = chartovarindex(line.at(1));
+            if (tmp != -1) {
+                if (line.at(0) == '#') {
+                    ireg[tmp] = atof(line.substr(2).c_str());
+                } else if (line.at(0) == '$') {
+                    sreg[tmp] = line.substr(2);
+                }
+            }
+        }
+    }
     // Flags
     bool ERROR_THROWN = false;
     string ERROR_TYPE = "NONE";
@@ -65,19 +87,5 @@ namespace plib {
         return;
     }
     
-    int chartovarindex(char &ch) {
-        return letters.find(ch);
-    }
     
-    void getint(char var) {
-        int index = chartovarindex(var);
-        if (index == -1) {
-            throw_error("VARIABLE NOT FOUND");
-            return;
-        }
-        string tmp;
-        cin >> tmp;
-        ireg[index] = atof(tmp.c_str());
-        return;
-    }
 }
