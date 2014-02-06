@@ -48,7 +48,7 @@ public:
 // Core function prototypes
 Parsedcmd parsecmd(string str);
 bool runcmd(Parsedcmd pcmd);
-int chartovarindex(char &ch);
+int chartovarindex(char ch);
 void iprompt();
 void fprompt(string file);
 void stripQuotes(string &in);
@@ -201,7 +201,7 @@ void stripQuotes(string &in) {
 	return;
 }
 
-int chartovarindex(char &ch) {
+int chartovarindex(char ch) {
 	return letters.find(ch);
 }
 
@@ -514,8 +514,8 @@ void dumpvars(string ofile) {
 	}
 	for (int c = 0; c < letters.length(); c++) {
 		ss.clear(); ss << ireg[chartovarindex(letters.at(c))];
-		of << ("#" + letters.at(c) + ss.str());
-		of << ("$" + letters.at(c) + sreg[chartovarindex(letters.at(c))]);
+		of << ("#" + letters.substr(1,1) + ss.str());
+		of << ("$" + letters.substr(1,1) + sreg[chartovarindex(letters.at(c))]);
 	}
 	of.close();
 }
