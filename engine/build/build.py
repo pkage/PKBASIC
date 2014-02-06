@@ -82,5 +82,6 @@ for arg in args:
 		os.system(cmd)
 	
 	print("finished build of [" + arg + "]")
+	count += 1
 
 print("processed " + str(count) + " config files")
