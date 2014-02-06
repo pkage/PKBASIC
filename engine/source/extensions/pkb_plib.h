@@ -2,6 +2,7 @@
 #include <sstream>
 #include <vector>
 #include <string.h>
+#include <fstream>
 
 using namespace std;
 
@@ -45,7 +46,7 @@ namespace plib {
         }
         string line; int tmp;
         while (!ifile.eof()) {
-            line = getline(ifile);
+            getline(ifile, line);
             tmp = chartovarindex(line.at(1));
             if (tmp != -1) {
                 if (line.at(0) == '#') {
@@ -56,6 +57,7 @@ namespace plib {
             }
         }
 	ifile.close();
+	return true;
     }
     // Flags
     bool ERROR_THROWN = false;
