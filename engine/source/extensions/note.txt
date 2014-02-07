@@ -11,6 +11,8 @@ library (written in C++ or whatever) processes it (and is passed invokation by a
 	modifier scripts solely contain variables: meant to modify the environment
 executed by main
 
+call by monolith:
+	lib vd_loc invoc output
 
 
 *provided lib is written in C++, it can really be written in almost anything
