@@ -77,8 +77,11 @@ for arg in args:
 	# make a hardlink if desired
 	if ln == "yes":
 		print("\nstep 3: hardlink\n\thardlinking from location to desired locations...")
+#		if os.path.isfile(ll):
+		print("\n\t\tremoving previous link...")
+		os.system("rm " + ll);
 		cmd = "ln " + od + on + " " + ll
-		print("\t\tinvoking [" + cmd + "]")
+		print("\n\t\tinvoking [" + cmd + "]")
 		os.system(cmd)
 	
 	print("finished build of [" + arg + "]")
