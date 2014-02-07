@@ -9,11 +9,18 @@
 #define PKBASIC_VER 1.0
 #endif
 
+#ifndef LIB_LOC
+#define LIB_LOC "/usr/local/pkb"
+#endif
+#ifndef TEMPDIR
+#define TEMPDIR "/tmp/"
+#endif
+
 using namespace std;
 
 class Parsedcmd {
 public:
-	string cmd;
+	string cmd, orig;
 	vector<string> args;
 	void add_arg(string arg) {
 		args.push_back(arg);
@@ -52,10 +59,10 @@ int chartovarindex(char ch);
 void iprompt();
 void fprompt(string file);
 void stripQuotes(string &in);
-void inlinate_functions(PFile &pf);
+void inlinate_functions(PFile &pf); // NYI
 int get_label(PFile &pf, int number);
 int get_label(PFile &pf, char ivar);
-void dumpvars(string ofile);
+string dumpvars();
 
 // Variable registers
 string sreg[52];
@@ -68,6 +75,9 @@ bool ERROR_THROWN = false;
 string ERROR_TYPE = "NONE";
 bool IPROMPT = false; // goto & lbl directives disabled in liveprompt mode
 void throw_error(string err) {ERROR_THROWN = true; ERROR_TYPE = err;}
+string LIBRARY_PATH = LIB_LOC;
+vector<string> libs;
+const int RFILE_NLEN = 10;
 
 // Auxillary function prototypes
 namespace aux {
@@ -80,6 +90,9 @@ namespace aux {
 	void getint(char var);
 	bool ifstatement(string stmt);
 	void syscall(string cmd);
+        void import_lib(string lib);
+	bool checklib(string lib);
+	bool call_lib(string lib, string invoc);
 }
 
 // main
@@ -137,6 +150,7 @@ Parsedcmd parsecmd(string str) {
 	//cout << "\nParsed argument as [" << arg << "]";
 	Parsedcmd pcmd;
 	pcmd.cmd = cmd;
+	pcmd.orig = str;
 	pcmd.add_arg(arg);
 	return pcmd;
 }
@@ -190,6 +204,14 @@ bool runcmd(Parsedcmd pcmd) {
 	}
 	if (pcmd.cmd == "sys") {
 		std::system(pcmd.get_arg(0).c_str());
+		return true;
+	}
+        if (pcmd.cmd == "import") {
+           libs.push_back(pcmd.get_arg(0));
+            return true;
+        }
+	if (aux::checklib(pcmd.cmd)) {
+		aux::call_lib(pcmd.cmd, pcmd.orig);
 		return true;
 	}
 	return false;
@@ -505,12 +527,22 @@ void aux::syscall(string cmd) {
 	system(cmd.c_str());
 }
 
-void dumpvars(string ofile) {
+string dumpvars() {
 	stringstream ss;
+	string ofile = TEMPDIR;
+	for (int c = 0; c < RFILE_NLEN; c++) {
+		if (rand()%2) {
+			ofile += letters.at(rand()%52);
+		} else {
+			ofile += NM.at(rand()%10);
+		}
+	}
+	ofile += ".vd";
+//	cout << "OFILE: " << ofile << "\n";
 	ofstream of; of.open(ofile.c_str());
-	if (of) {
+	if (!of) {
 		throw_error("UNABLE TO OPEN VARDUMP");
-		return;
+		return "";
 	}
 	for (int c = 0; c < letters.length(); c++) {
 		ss.clear(); ss << ireg[chartovarindex(letters.at(c))];
@@ -518,4 +550,31 @@ void dumpvars(string ofile) {
 		of << ("$" + letters.substr(1,1) + sreg[chartovarindex(letters.at(c))]);
 	}
 	of.close();
+	return ofile;
+}
+
+bool aux::checklib(string lib) {
+	for (int c = 0; c < libs.size(); c++) {
+		if (libs.at(c) == lib) {
+			return true;
+		}
+	}
+	return false;
+}
+
+bool aux::call_lib(string lib, string invoc) {
+	string vdmp = dumpvars(), cmd, ofile;
+	for (int c = 0; c < RFILE_NLEN; c++) {
+                if (rand()%2) {
+                        ofile += letters.at(rand()%52);
+                } else {
+                        ofile += NM.at(rand()%10);
+                }
+        }
+	cmd = LIB_LOC;
+	cmd += "/" + lib + " " + vdmp + " '" + invoc + "' " + TEMPDIR + ofile + ".sc";
+//	cout << "Calling [" << cmd << "]";
+	std::system(cmd.c_str());
+	fprompt(TEMPDIR + ofile + ".sc");
+	return true;
 }

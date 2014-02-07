@@ -25,7 +25,7 @@ namespace plib {
     
     // Core function prototypes
     Parsedcmd parsecmd(string str);
-    int chartovarindex(char &ch);
+    int chartovarindex(char ch);
     void stripQuotes(string &in);
     
     // Variable registers
@@ -34,7 +34,7 @@ namespace plib {
     const string letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
     const string NM = "0123456789";
     
-    int chartovarindex(char &ch) {
+    int chartovarindex(char ch) {
         return letters.find(ch);
     }
     
@@ -82,7 +82,6 @@ namespace plib {
         pcmd.add_arg(arg);
         return pcmd;
     }
-    
     
     void stripQuotes(string &in) {
         if (in.at(0) == '\"') {in.erase(0,1);}
