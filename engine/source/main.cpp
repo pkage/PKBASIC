@@ -207,7 +207,7 @@ bool runcmd(Parsedcmd pcmd) {
 		return true;
 	}
         if (pcmd.cmd == "import") {
-           libs.push_back(pcmd.get_arg(0));
+            aux::import_lib(pcmd.get_arg(0));
             return true;
         }
 	if (aux::checklib(pcmd.cmd)) {
@@ -577,4 +577,17 @@ bool aux::call_lib(string lib, string invoc) {
 	std::system(cmd.c_str());
 	fprompt(TEMPDIR + ofile + ".sc");
 	return true;
+}
+
+void aux::import_lib(string lib) {
+	if (lib.at(0) == '$') {
+		int tmp = chartovarindex(lib.at(1));
+		if (tmp != -1) {
+			libs.push_back(sreg[tmp]);
+		} else {
+			throw_error("INVALID VARIABLE");
+		}
+	} else {
+		libs.push_back(lib);
+	}
 }
