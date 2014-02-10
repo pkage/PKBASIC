@@ -79,7 +79,7 @@ for arg in args:
 		print("\nstep 3: hardlink\n\thardlinking from location to desired locations...")
 #		if os.path.isfile(ll):
 		print("\n\t\tremoving previous link...")
-		os.system("rm " + ll);
+		os.system("rm " + ll + "/" + on);
 		cmd = "ln " + od + on + " " + ll
 		print("\n\t\tinvoking [" + cmd + "]")
 		os.system(cmd)
