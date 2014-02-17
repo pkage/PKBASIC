@@ -1,0 +1,11 @@
+## Here is a short example nanorc file for PK Basic
+##
+syntax "pkb" "\.pkb$"
+
+color red "$" "#" "="
+color magenta "\+=" "==" "-=" "/=" "\*=" "%=" "\~\~"
+color green "import" "label" "goto"
+color brightblack "print" "get"
+color cyan "//.*"
+
+color brightblue "<[^= 	]*>" ""(\\.|[^"])*""
