@@ -63,6 +63,7 @@ void inlinate_functions(PFile &pf); // NYI
 int get_label(PFile &pf, int number);
 int get_label(PFile &pf, char ivar);
 string dumpvars();
+void initialize_variables();
 
 // Variable registers
 string sreg[52];
@@ -98,6 +99,7 @@ namespace aux {
 // main
 int main(int argc, char* argv[]) {
 	srand(time(0));
+	initialize_variables();
 	if (argc == 1) {
 		IPROMPT = true;
 		cout << "PKBasic interactive prompt enabled.";
@@ -606,5 +608,12 @@ void aux::import_lib(string lib) {
 		}
 	} else {
 		libs.push_back(lib);
+	}
+}
+
+void initialize_variables() {
+	for (int c = 0; c < 52; c++) {
+		sreg[c] = "";
+		ireg[c] = 0;
 	}
 }
