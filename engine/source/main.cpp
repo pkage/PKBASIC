@@ -590,7 +590,7 @@ bool aux::call_lib(string lib, string invoc) {
                         ofile += NM.at(rand()%10);
                 }
         }
-	cmd = LIB_LOC;
+	cmd = LIBRARY_PATH;
 	cmd += "/" + lib + " " + vdmp + " '" + invoc + "' " + TEMPDIR + ofile + ".sc";
 //	cout << "Calling [" << cmd << "]";
 	std::system(cmd.c_str());
