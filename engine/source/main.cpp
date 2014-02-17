@@ -214,6 +214,9 @@ bool runcmd(Parsedcmd pcmd) {
 		aux::call_lib(pcmd.cmd, pcmd.orig);
 		return true;
 	}
+	if (pcmd.cmd == "skip") {
+		return true; // doesn't do anything
+	}
 	return false;
 }
 
@@ -485,6 +488,19 @@ bool aux::ifstatement(string stmt) {
 		} else {
 			throw_error("ILLEGAL OPERATION ON STRING");
 		}
+	} else if (bit1[0] == '$' && bit2[0] != '$') {
+		i1 = chartovarindex(bit1[0]);
+		if (i1 != -1) {
+			throw_error("VARIABLE NOT FOUND");
+			return false;
+		}
+		if (operand == "==") {
+			stripQuotes(bit2);
+			return (sreg[i1] == bit2);
+		} else {
+			throw_error("VARIABLE NOT FOUND");
+			return false;
+		}
 	} else
 	if (bit1[0] == '#' && bit2[0] == '#') {
 		i1 = chartovarindex(bit1[1]);
@@ -548,6 +564,7 @@ string dumpvars() {
 		ss.clear(); ss << ireg[chartovarindex(letters.at(c))];
 		of << ("#" + letters.substr(1,1) + ss.str());
 		of << ("$" + letters.substr(1,1) + sreg[chartovarindex(letters.at(c))]);
+		of << "\n";
 	}
 	of.close();
 	return ofile;
