@@ -1,6 +1,6 @@
-/* testlib.cpp
+/* varlib.cpp
  * pkbasic test library
- * increments var by 4
+ * reads all variables
  * useless, but it's a test
  */
 
