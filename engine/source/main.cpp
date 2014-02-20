@@ -491,13 +491,14 @@ bool aux::ifstatement(string stmt) {
 			throw_error("ILLEGAL OPERATION ON STRING");
 		}
 	} else if (bit1[0] == '$' && bit2[0] != '$') {
-		i1 = chartovarindex(bit1[0]);
-		if (i1 != -1) {
+		i1 = chartovarindex(bit1[1]);
+		if (i1 == -1) {
 			throw_error("VARIABLE NOT FOUND");
 			return false;
 		}
 		if (operand == "==") {
 			stripQuotes(bit2);
+//			cout << "{bit1: (" << bit1 << ")[" << i1 << "], bit2: ("<< bit2 << ")}"; // debug, showed var info
 			return (sreg[i1] == bit2);
 		} else {
 			throw_error("VARIABLE NOT FOUND");
