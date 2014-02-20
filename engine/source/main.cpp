@@ -78,7 +78,9 @@ bool IPROMPT = false; // goto & lbl directives disabled in liveprompt mode
 void throw_error(string err) {ERROR_THROWN = true; ERROR_TYPE = err;}
 string LIBRARY_PATH = LIB_LOC;
 vector<string> libs;
+vector<string> created_files;
 const int RFILE_NLEN = 10;
+
 
 // Auxillary function prototypes
 namespace aux {
@@ -94,6 +96,7 @@ namespace aux {
         void import_lib(string lib);
 	bool checklib(string lib);
 	bool call_lib(string lib, string invoc);
+	void clean_files();
 }
 
 // main
@@ -110,6 +113,7 @@ int main(int argc, char* argv[]) {
 		fprompt(string(argv[1]));
 	}
 	cout << "\n";
+	aux::clean_files();
 	return 0;
 }
 
@@ -587,7 +591,7 @@ bool aux::checklib(string lib) {
 }
 
 bool aux::call_lib(string lib, string invoc) {
-	string vdmp = dumpvars(), cmd, ofile;
+	string vdmp = dumpvars(), cmd, ofile,tmp;
 	for (int c = 0; c < RFILE_NLEN; c++) {
                 if (rand()%2) {
                         ofile += letters.at(rand()%52);
@@ -597,6 +601,10 @@ bool aux::call_lib(string lib, string invoc) {
         }
 	cmd = LIBRARY_PATH;
 	cmd += "/" + lib + " " + vdmp + " '" + invoc + "' " + TEMPDIR + ofile + ".sc";
+	tmp = TEMPDIR + "/" + ofile + ".oc";
+	clean_files.push_back(tmp);
+	tmp = TEMPDIR + "/" + vdmp;
+        clean_files.push_back(tmp);
 //	cout << "Calling [" << cmd << "]";
 	std::system(cmd.c_str());
 	fprompt(TEMPDIR + ofile + ".sc");
@@ -620,5 +628,13 @@ void initialize_variables() {
 	for (int c = 0; c < 52; c++) {
 		sreg[c] = " ";
 		ireg[c] = 0;
+	}
+}
+
+void aux::clean_files() {
+	string tmp;
+	for ( int c = 0; c < created_files.size(); c++ ) {
+		tmp = "rm " + created_files.at(c);
+		system(tmp.c_str());
 	}
 }
