@@ -487,6 +487,8 @@ bool aux::ifstatement(string stmt) {
 			} else {
 				return false;
 			}
+		} else if (operand == "!=") {
+			return (sreg[i1] != sreg[i2]);
 		} else {
 			throw_error("ILLEGAL OPERATION ON STRING");
 		}
@@ -500,6 +502,9 @@ bool aux::ifstatement(string stmt) {
 			stripQuotes(bit2);
 //			cout << "{bit1: (" << bit1 << ")[" << i1 << "], bit2: ("<< bit2 << ")}"; // debug, showed var info
 			return (sreg[i1] == bit2);
+		} else if (operand == "!=") {
+			stripQuotes(bit2);
+			return (sreg[i1] != bit2);
 		} else {
 			throw_error("VARIABLE NOT FOUND");
 			return false;
