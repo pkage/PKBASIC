@@ -612,7 +612,7 @@ void aux::import_lib(string lib) {
 
 void initialize_variables() {
 	for (int c = 0; c < 52; c++) {
-		sreg[c] = "";
+		sreg[c] = " ";
 		ireg[c] = 0;
 	}
 }
