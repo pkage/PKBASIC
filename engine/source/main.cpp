@@ -591,7 +591,7 @@ bool aux::checklib(string lib) {
 }
 
 bool aux::call_lib(string lib, string invoc) {
-	string vdmp = dumpvars(), cmd, ofile,tmp;
+	string vdmp = dumpvars(), cmd, ofile,tmp,td = TEMPDIR;
 	for (int c = 0; c < RFILE_NLEN; c++) {
                 if (rand()%2) {
                         ofile += letters.at(rand()%52);
@@ -601,10 +601,10 @@ bool aux::call_lib(string lib, string invoc) {
         }
 	cmd = LIBRARY_PATH;
 	cmd += "/" + lib + " " + vdmp + " '" + invoc + "' " + TEMPDIR + ofile + ".sc";
-	tmp = TEMPDIR + "/" + ofile + ".oc";
-	clean_files.push_back(tmp);
-	tmp = TEMPDIR + "/" + vdmp;
-        clean_files.push_back(tmp);
+	tmp = td + "/" + ofile + ".oc";
+	created_files.push_back(tmp);
+	tmp = td + "/" + vdmp;
+        created_files.push_back(tmp);
 //	cout << "Calling [" << cmd << "]";
 	std::system(cmd.c_str());
 	fprompt(TEMPDIR + ofile + ".sc");
@@ -635,6 +635,7 @@ void aux::clean_files() {
 	string tmp;
 	for ( int c = 0; c < created_files.size(); c++ ) {
 		tmp = "rm " + created_files.at(c);
-		system(tmp.c_str());
+		cout << "attempting to execute [" << tmp << "]";
+		std::system(tmp.c_str());
 	}
 }
