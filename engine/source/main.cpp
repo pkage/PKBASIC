@@ -573,7 +573,7 @@ string dumpvars() {
 		return "";
 	}
 	for (int c = 0; c < letters.length(); c++) {
-		ss.clear(); ss << ireg[chartovarindex(letters.at(c))];
+		ss.str(""); ss << ireg[chartovarindex(letters.at(c))];
 		of << ("#" + letters.substr(c,1) + ss.str()) << '\n';
 		of << ("$" + letters.substr(c,1) + sreg[chartovarindex(letters.at(c))]) << '\n';
 	}
@@ -603,8 +603,7 @@ bool aux::call_lib(string lib, string invoc) {
 	cmd += "/" + lib + " " + vdmp + " '" + invoc + "' " + TEMPDIR + ofile + ".sc";
 	tmp = td + "/" + ofile + ".oc";
 	created_files.push_back(tmp);
-	tmp = td + "/" + vdmp;
-        created_files.push_back(tmp);
+        created_files.push_back(vdmp);
 //	cout << "Calling [" << cmd << "]";
 	std::system(cmd.c_str());
 	fprompt(TEMPDIR + ofile + ".sc");
