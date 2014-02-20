@@ -564,8 +564,8 @@ string dumpvars() {
 	}
 	for (int c = 0; c < letters.length(); c++) {
 		ss.clear(); ss << ireg[chartovarindex(letters.at(c))];
-		of << ("#" + letters.substr(1,1) + ss.str()) << '\n';
-		of << ("$" + letters.substr(1,1) + sreg[chartovarindex(letters.at(c))]) << '\n';
+		of << ("#" + letters.substr(c,1) + ss.str()) << '\n';
+		of << ("$" + letters.substr(c,1) + sreg[chartovarindex(letters.at(c))]) << '\n';
 	}
 	of.close();
 	return ofile;
