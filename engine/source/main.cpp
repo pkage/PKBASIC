@@ -633,8 +633,8 @@ void initialize_variables() {
 void aux::clean_files() {
 	string tmp;
 	for ( int c = 0; c < created_files.size(); c++ ) {
-		tmp = "rm " + created_files.at(c);
-		cout << "attempting to execute [" << tmp << "]";
+		tmp = "rm -f " + created_files.at(c);
+//		cout << "attempting to execute [" << tmp << "]";
 		std::system(tmp.c_str());
 	}
 }
