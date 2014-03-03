@@ -46,3 +46,6 @@ print "\nEnded.\nCycles: "
 print #f
 print "\nInternal cycles: "
 print #A
+
+import varlib.o
+varlib.o
