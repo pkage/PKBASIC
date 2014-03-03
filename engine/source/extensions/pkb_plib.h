@@ -45,9 +45,18 @@ namespace plib {
             return false;
         }
         string line; int tmp;
+	vector<string> bundle;
         while (!ifile.eof()) {
             getline(ifile, line);
-            tmp = chartovarindex(line.at(1));
+	    bundle.push_back(line);
+	}
+	for (int x = 0; x < bundle.size(); x++) {
+            line = bundle.at(x);
+	//	std::cout << "\nprocessing " << line;
+	    if (line.length() < 2) {
+		x++; continue;
+	    }
+	    tmp = chartovarindex(line.at(1));
             if (tmp != -1) {
                 if (line.at(0) == '#') {
                     ireg[tmp] = atof(line.substr(2).c_str());
