@@ -401,6 +401,11 @@ void fprompt(string file) {
 //	cout << "STARTING MAIN LOOP";
 	for (int c = 0; c < pf.lines.size(); c++) {
 		pcmd = parsecmd(pf.lines.at(c));
+		if (c == 0) {
+			if (pf.lines.at(c).at(0) == '#' && pf.lines.at(c).at(1) == '!') {
+				continue;
+			}
+		}
 		if (pcmd.cmd == "goto") {
 			if (pcmd.get_arg(0)[0] == '#') {
 				tmp = get_label(pf, pcmd.get_arg(0)[1]);
