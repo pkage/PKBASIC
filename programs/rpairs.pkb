@@ -1,3 +1,5 @@
+#! /usr/local/bin/pkb
+
 goto 4
 label 3
 // subroutine test
@@ -47,5 +49,5 @@ print #f
 print "\nInternal cycles: "
 print #A
 
-import varlib.o
-varlib.o
+//import varlib.o
+//varlib.o
