@@ -65,11 +65,7 @@ except:
 	print("error opening build/main.cfg\ntry downloading the project again")
 	sys.exit(0)
 try:
-<<<<<<< HEAD
 	args = ("-std=c++0x -DLIB_LOC=" + LIB_LOC + " -DTMPDIR=" + TMPDIR)
-=======
-	args = ("-std=c++11 -DLIB_LOC=" + LIB_LOC + " -DTMPDIR=" + TMPDIR)
->>>>>>> 07dc474b8bb0b0594d46ad169578e74f26ad2d5b
 	cfg.set("CONFIG","additional args", args)
 	cfg.set("CONFIG","output dir", BIN_DIR)
 	cfg.set("CONFIG","compiler", COMPILER)

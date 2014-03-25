@@ -5,12 +5,9 @@
 #include <string.h>
 #include <cmath>
 
-<<<<<<< HEAD
 #include <cstdlib>
 #include <random>
 
-=======
->>>>>>> 07dc474b8bb0b0594d46ad169578e74f26ad2d5b
 #ifndef PKBASIC_VER
 #define PKBASIC_VER 1.0
 #endif
@@ -22,13 +19,10 @@
 #define TEMPDIR "/tmp/"
 #endif
 
-<<<<<<< HEAD
 #ifndef INSERT_RDEPTH
 #define INSERT_RDEPTH 1000
 #endif
 
-=======
->>>>>>> 07dc474b8bb0b0594d46ad169578e74f26ad2d5b
 using namespace std;
 
 class Parsedcmd {
@@ -48,7 +42,6 @@ public:
 };
 
 class PFile {
-<<<<<<< HEAD
 private:
 	int depth;
 public:
@@ -66,25 +59,15 @@ public:
 		ifstream file; file.open(fname.c_str());
 		if (!file) {
 			cout << "ERROR: file " << fname << "not found";
-=======
-public:
-	vector<string> lines;
-	bool get_from_file(string fname) {
-		ifstream file; file.open(fname.c_str());
-		if (!file) {
->>>>>>> 07dc474b8bb0b0594d46ad169578e74f26ad2d5b
 			return false; // file not found
 		}
 		string tmp;
 		while (!file.eof()) {
 			getline(file, tmp);
-<<<<<<< HEAD
 			if (checkInsert(tmp) && depth < INSERT_RDEPTH) {
 				depth++;
 				get_from_file(fname);
 			}
-=======
->>>>>>> 07dc474b8bb0b0594d46ad169578e74f26ad2d5b
 			lines.push_back(tmp);
 		}
 		return true;
@@ -137,11 +120,8 @@ namespace aux {
 	bool checklib(string lib);
 	bool call_lib(string lib, string invoc);
 	void clean_files();
-<<<<<<< HEAD
 	void floor(string var);
 	void ceil(string var);
-=======
->>>>>>> 07dc474b8bb0b0594d46ad169578e74f26ad2d5b
 }
 
 // main
@@ -249,7 +229,6 @@ bool runcmd(Parsedcmd pcmd) {
 		}
 		return true;
 	}
-<<<<<<< HEAD
 	if (pcmd.cmd == "floor") {
 		aux::floor(pcmd.get_arg(0));	
 		return true;
@@ -258,8 +237,6 @@ bool runcmd(Parsedcmd pcmd) {
 		aux::ceil(pcmd.get_arg(0));	
 		return true;
 	}
-=======
->>>>>>> 07dc474b8bb0b0594d46ad169578e74f26ad2d5b
 	if (pcmd.cmd[0] == '#') {
 		aux::intops(pcmd);
 		return true;
@@ -354,11 +331,7 @@ void aux::set_string(char var, string str) {
 void aux::gets(char var) {
 	int index = chartovarindex(var);
 	if (index != -1) {
-<<<<<<< HEAD
 		getline(cin,sreg[index]);
-=======
-		cin >> sreg[index];
->>>>>>> 07dc474b8bb0b0594d46ad169578e74f26ad2d5b
 	} else {
 		throw_error("VARIABLE NOT FOUND");
 	}
@@ -385,27 +358,16 @@ void aux::intops(Parsedcmd pcmd) {
 			ireg[index] = ireg[index] * atof(dref.get_arg(0).c_str());
 		}
 		if (dref.cmd == "floor") {
-<<<<<<< HEAD
 			ireg[index] = std::floor(ireg[index]);
 		}
 		if (dref.cmd == "ceil") {
 			ireg[index] = std::ceil(ireg[index]);
-=======
-			ireg[index] = floor(ireg[index]);
-		}
-		if (dref.cmd == "ceil") {
-			ireg[index] = ceil(ireg[index]);
->>>>>>> 07dc474b8bb0b0594d46ad169578e74f26ad2d5b
 		}
 		if (dref.cmd == "^=") {
 			ireg[index] = pow(ireg[index], atof(dref.get_arg(0).c_str()));
 		}
 		if (dref.cmd == "%=") {
-<<<<<<< HEAD
 			ireg[index] = (int)ireg[index]%(int)std::floor(atoi(dref.get_arg(0).c_str()));
-=======
-			ireg[index] = (int)ireg[index]%(int)floor(atoi(dref.get_arg(0).c_str()));
->>>>>>> 07dc474b8bb0b0594d46ad169578e74f26ad2d5b
 		}
 		if (dref.cmd == "~~") {
 			ireg[index] = rand()%atoi(dref.get_arg(0).c_str());;
@@ -438,17 +400,10 @@ void aux::intops(Parsedcmd pcmd) {
                         ireg[index] = pow(ireg[index], ireg[i2]);
                 }
                 if (dref.cmd == "%=") {
-<<<<<<< HEAD
                         ireg[index] = (int)ireg[index]%(int)std::floor(ireg[i2]);
                 }
 		if (dref.cmd == "~~") {
 			ireg[index] = rand()%(int)std::floor(ireg[i2]);
-=======
-                        ireg[index] = (int)ireg[index]%(int)floor(ireg[i2]);
-                }
-		if (dref.cmd == "~~") {
-			ireg[index] = rand()%(int)floor(ireg[i2]);
->>>>>>> 07dc474b8bb0b0594d46ad169578e74f26ad2d5b
 		}
 	} else {
 		throw_error("INVALID OPERAND ON INTEGER");
@@ -721,7 +676,6 @@ void aux::clean_files() {
 		std::system(tmp.c_str());
 	}
 }
-<<<<<<< HEAD
 
 void aux::floor(string var) {
 	if (var[0] != '#') {
@@ -744,5 +698,3 @@ void aux::ceil(string var) {
 	ireg[i] = std::ceil(ireg[i]);
 }
 		
-=======
->>>>>>> 07dc474b8bb0b0594d46ad169578e74f26ad2d5b

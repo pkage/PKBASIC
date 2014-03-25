@@ -1,1 +1,1 @@
-insert rpair.pkb
+insert rpairs.pkb
