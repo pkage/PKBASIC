@@ -1,4 +1,4 @@
-PKBasic
+PKBASIC
 =======
 
 PKBasic is my own flavor of BASIC.
